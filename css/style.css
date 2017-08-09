@@ -1,0 +1,34 @@
+
+.footer {
+	position: absolute;
+	bottom: 0;
+	font-size: 1.2em;
+	font-family: Verdana, Times, Arial;
+	font-weight: 600;
+}
+
+.dropdown-menu-large {
+	max-width: 100%;
+	min-width: 100%;
+	margin-top: 4px;
+	margin-left: 0;
+	border-radius: 5px;
+	padding: 8px 8px;
+	border-color: rgba(109, 141, 159, 0.25);
+	box-shadow: 0 2px 4px rgba(109, 141, 159, 0.35) !important;
+	-webkit-box-shadow: 0 2px 4px rgba(109, 141, 159, 0.35) !important;
+	-moz-box-shadow: 0 2px 4px rgba(109, 141, 159, 0.35) !important;
+	-o-box-shadow: 0 2px 4px rgba(109, 141, 159, 0.35) !important;
+}
+
+.dropdown-menu-large > li {
+	margin-bottom: 30px;
+}
+
+.dropdown-menu-large > li:last-child {
+	margin-bottom: 0;
+}
+
+.dropdown-menu-large .dropdown-header {
+	padding: 3px 15px !important;
+}

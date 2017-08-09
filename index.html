@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+    <meta name="description" content="Página web desarrollada con Bootstrap - Vue.js 2 que permite la gestión de tareas">
+    <meta name="author" content="Yovanny Diaz">
+    <link rel="icon" href="">
+    <title> Gestión de Tareas con Vue.js + Bootstrap</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <!-- Animate CSS -->
+    <link href="css/animate.css" rel="stylesheet">
+    <!-- Style CSS -->
+    <link href="css/style.css" rel="stylesheet">
+
+    <!-- VueJS -->
+    <script src="js/vue.js"></script>
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="js/html5shiv.min.js"></script>
+      <script src="js/respond.min.js"></script>
+    <![endif]-->
+  </head>
+
+  <body>
+    <div class="container">
+      <h1 class="jumbotron text-center">
+        Gestión de Tareas
+      </h1>
+    </div>
+    <div id="app" class="container" :style="{'padding-top': '20px'}">
+      <div class="col-md-7">
+        <div class="jumbotron" v-if="tasks.length > 0">
+          <h3 class="text-info" :style="basiStyleH1">Listado de todas las tareas</h3>
+          <template v-for="(tarea,i) in tasks">
+            <h4>
+              <a @click="cambiarEstado(i, tarea.pending)" :style="cursorStyle">{{ tarea.task }}</a>
+              <span class="label label-warning" v-if="tarea.pending == true">Por realizar</span><span class="label label-success" v-else>Realizada</span>
+            </h4>
+            <hr />
+          </template>
+
+          <div v-if="pendingTasks.length > 0" :style="{'padding-top': '20px'}">
+            <h3 class="text-danger" :style="basiStyleH1">Listado de tareas pendientes.</h3>
+            <ul v-for="item in pendingTasks">
+              <li class="label label-warning">{{ item.task }}</li>
+            </ul>
+          </div>
+        </div>
+        <div v-else>
+          <h2 class="text-danger text-center">No existen tareas creadas.</h2>
+        </div>
+      </div>
+
+      <div class="col-md-5">
+        <div class="dropdown" :style="{'padding-top': '20px'}">
+          <button class="btn btn-success btn-block dropdown-toggle" type="button" id="menuDropLarge" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"> Agregar Tarea </button>
+
+          <ul class="dropdown-menu dropdown-menu-large" aria-labelledby="menuDropLarge">
+            <form :class="nameFieldClasses">
+              <label class="control-label">Nombre de Tarea</label>       
+              <input type="text" v-model="newTask" @keyup.prevent="inputState" class="form-control">
+              <p v-if="validateNameTarea != ''" class="help-block">{{ validateNameTarea }}</p>
+              <div :style="{'padding': '5px 0', 'text-align': 'right'}">
+              <button class="btn btn-warning" :class="disable" @click="createTask($event, true)">Tarea Pendiente</button>
+              <button type="button" class="btn btn-success" :class="disable" @click="createTask($event, false)">Tarea Realizada</button></div>
+            </form>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Incluyendo jQuery -->
+    <script type="text/javascript" src="js/jquery.min.js"></script>
+    <!-- Incluyendo Bootstrap JS -->
+    <script type="text/javascript" src="js/bootstrap.min.js"></script>
+
+    <!-- Instancia de VueJS -->
+    <script type="text/javascript">
+      var vm= new Vue({
+        el: '#app',
+        data: {
+          newTask: '',
+          tasks: [],
+          disable: {
+            'disabled': true
+          }
+        },
+        computed: {
+          basiStyleH1: function() {
+            return [{'padding-bottom': '15px', 'text-decoration': 'underline'}];
+          },
+          pendingTasks: function() {
+            return this.tasks.filter(function(item) {
+              return item.pending;
+            });
+          },
+          cursorStyle: function() {
+            return [{'cursor': 'pointer'}];
+          },
+          validateNameTarea: function() {
+            var val = this.newTask.trim();
+
+            if(val == '') {
+              return 'El nombre es obigatorio y requerido.';
+            }
+
+            if(val.length < 5) {
+              return 'El nombre de la tarea debe ser mayor a 5 caracteres.';
+            }
+          },
+          nameFieldClasses: function() {
+            return ['form-group', {'has-error': this.validateNameTarea}];
+          }
+        },
+        methods: {
+          createTask: function(e, p) {
+            e.preventDefault();
+
+            this.tasks.push({
+              task: this.newTask,
+              pending: p
+            });
+
+            this.newTask = '';
+            this.disable['disabled'] = true;
+          },
+          cambiarEstado: function(a, p) {
+            if(p == true) {
+              this.tasks[a].pending = false;
+            } else {
+              this.tasks[a].pending = true;
+            }
+          },
+          inputState: function() {
+            if(this.newTask.length >= 5 && this.newTask.trim() != '') {
+              this.disable['disabled'] = false;
+            } else {
+              this.disable['disabled'] = true;
+            }
+          }
+        }
+      });
+    </script>    
+  </body>
+</html>
